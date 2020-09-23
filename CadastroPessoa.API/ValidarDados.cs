@@ -1,6 +1,6 @@
-﻿using CadastroPessoa.Data.Entity;
-using System;
+﻿using System;
 using static System.String;
+using CadastroPessoa.Data.Entity;
 
 namespace CadastroPessoa.API
 {
@@ -8,26 +8,43 @@ namespace CadastroPessoa.API
     {
         public static void ValidarPessoa(Pessoa pessoa)
         {
-            if (IsNullOrEmpty(pessoa.Nome))
-                throw new ArgumentException(nameof(pessoa.Nome));
+            Validar(it => it.Nome, pessoa).ValidarTexto(nameof(pessoa.Nome));
 
-            if (IsNullOrEmpty(pessoa.CPF))
-                throw new ArgumentException(nameof(pessoa.CPF));
+            Validar(it => it.CPF, pessoa).ValidarTexto(nameof(pessoa.CPF));
 
-            if (pessoa.DataNascimento == default)
-                throw new ArgumentException(nameof(pessoa.DataNascimento));
+            Validar(it => it.DataNascimento, pessoa).ValidarTexto(nameof(pessoa.DataNascimento));
 
-            if (IsNullOrEmpty(pessoa.PaisNascimento))
-                throw new ArgumentException(nameof(pessoa.PaisNascimento));
+            Validar(it => it.PaisNascimento, pessoa).ValidarTexto(nameof(pessoa.PaisNascimento));
 
-            if (IsNullOrEmpty(pessoa.EstadoNascimento))
-                throw new ArgumentException(nameof(pessoa.EstadoNascimento));
+            Validar(it => it.EstadoNascimento, pessoa).ValidarTexto(nameof(pessoa.EstadoNascimento));
 
-            if (IsNullOrEmpty(pessoa.CidadeNascimento))
-                throw new ArgumentException(nameof(pessoa.CidadeNascimento));
+            Validar(it => it.CidadeNascimento, pessoa).ValidarTexto(nameof(pessoa.CidadeNascimento));
 
-            if (IsNullOrEmpty(pessoa.Email))
-                throw new ArgumentException(nameof(pessoa.Email));
+            Validar(it => it.Email, pessoa).ValidarTexto(nameof(pessoa.Email));
+
+        }
+
+        public static object Validar(Func<Pessoa, object> action, Pessoa pessoa)
+        {
+            var valor = action(pessoa);
+            return valor;
+        }
+    }
+
+    public static class Extensions
+    {
+        internal static void Guard(this object obj, string message, string paramName)
+        {
+            if (obj == null)
+            {
+                throw new ArgumentNullException(paramName, message);
+            }
+        }
+
+        internal static void ValidarTexto(this object valor, string propriedade)
+        {
+            if (IsNullOrEmpty(valor.ToString()))
+                throw new ArgumentException($"{propriedade}");
         }
     }
 }

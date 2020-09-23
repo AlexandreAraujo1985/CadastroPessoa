@@ -50,8 +50,8 @@ namespace CadastroPessoa.API.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> AlterarPessoa([FromBody] Pessoa pessoa)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> AlterarPessoa([FromBody] Pessoa pessoa, int id)
         {
             await _pessoaRepository.IncluirPessoa(pessoa);
             return Ok();
